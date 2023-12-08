@@ -1,0 +1,9 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json": "file:///c%3A/Users/yabsi/OneDrive/Dokumente/02_HAUSAUFGABEN/U133-Grafana_Prometheus/Grafana_Prometheus/ansible/playbooks/prometheus.yml"
+    },
+    "cSpell.ignoreWords": [
+        "Alertmanager",
+        "alertmanager"
+    ]
+}

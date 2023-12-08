@@ -1,0 +1,6 @@
+---
+- name: alertmanager
+  hosts: server1
+  roles: 
+  - alertmanager
+  become: true

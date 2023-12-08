@@ -1,0 +1,18 @@
+---
+- name: Prometheus
+  hosts: server1
+  roles: 
+  - prometheus
+  become: true
+
+- name: Node Exporter
+  hosts: server1
+  roles: 
+  - node_exporter
+  become: true
+
+- name: Grafana
+  hosts: server1
+  roles: 
+  - grafana
+  become: true

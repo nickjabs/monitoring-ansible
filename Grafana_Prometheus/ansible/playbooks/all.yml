@@ -1,0 +1,30 @@
+---
+- name: alertmanager
+  hosts: server1
+  become: true
+  roles:
+    - alertmanager
+
+- name: Grafana
+  hosts: server1
+  become: true
+  roles:
+    - grafana
+
+- name: Node Exporter Server1
+  hosts: server1
+  become: true
+  roles:
+    - node_exporter
+
+- name: Prometheus
+  hosts: server1
+  become: true
+  roles: 
+    - prometheus
+
+- name: Node Exporter Server 2
+  hosts: server2
+  become: true
+  roles:
+    - node_exporter

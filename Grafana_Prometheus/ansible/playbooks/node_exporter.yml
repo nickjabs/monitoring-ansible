@@ -1,0 +1,12 @@
+---
+- name: Node Exporter Playbook 1
+  hosts: server1
+  become: true
+  roles: 
+    - node_exporter
+
+- name: Node Exporter Playbook 2
+  hosts: server2
+  become: true
+  roles: 
+    - node_exporter

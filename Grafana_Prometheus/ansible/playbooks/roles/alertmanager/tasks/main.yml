@@ -1,0 +1,64 @@
+---
+- name: Update all packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+
+- name: create directory
+  file:
+    path: /home/ubuntu/alertmanager
+    state: directory
+
+- name: download alertmanager
+  get_url:
+    url: "https://github.com/prometheus/alertmanager/releases/download/v0.26.0/alertmanager-0.26.0.linux-amd64.tar.gz"
+    dest: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64.tar.gz"
+
+- name: unpack installation files
+  unarchive:
+    src: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64.tar.gz"
+    dest: "/home/ubuntu/alertmanager"
+    remote_src: yes
+
+- name: move files
+  copy:
+    src: "/home/ubuntu/alertmanager/alertmanager-0.26.0.linux-amd64/"
+    dest: "/usr/local/bin/alertmanager/"
+    remote_src: yes
+
+- name: create config file
+  ansible.builtin.copy:
+    dest: "/usr/local/bin/alertmanager/alertmanager-config.yml"
+    src: files/alertmanager-config.yml
+      
+
+
+- name: create service file
+  ansible.builtin.copy:
+    dest: "/etc/systemd/system/alertmanager.service"
+    content: |
+      [Unit]
+      Description=Alertmanager
+      After=network.target
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/local/bin/alertmanager/alertmanager --config.file=/usr/local/bin/alertmanager/alertmanager-config.yml
+      EnvironmentFile=/usr/local/bin/alertmanager/alertmanager-config.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: create env file
+  ansible.builtin.copy:
+    dest: "/usr/local/bin/alertmanager/alertmanager-config.env"
+    content: |
+      AWS_ACCESS_KEY_ID = ASIA6CNH7A4L32UTVUGW
+      AWS_SECRET_ACCESS_KEY = hRJ2luQK+karNwbPmOb2GPdj7mfP9ckpCePZofsj
+      AWS_SESSION_TOKEN = IQoJb3JpZ2luX2VjEKb//////////wEaDGV1LWNlbnRyYWwtMSJHMEUCIAW7XUjPgoyfVW2tfVstPR+7BV+8ggGEBDjw0aHfOyG9AiEA9nKUmI77ff2olXP5zV90fx2Mw93busowDromXiHlCmUqoQMI7///////////ARAAGgw5NjcyNTY3NzAzMjciDFhyIXExu1dyOHNenSr1AvCzArryT5iebG7ZgqTn/afDCy03CK8BWZh6q1QrV8LsKSX0QYkIFWOwKBxIEA47W0lT5QSMqSldT63QplwAEbSDxmN1yMK3i+xF2+//ogZ9f3Iv0j9DmtqdkgRTpd630yuf4kbwcQrAB1hkJOC8jOvLNMvbWIP2VQExGhd7kY5yrDyhk0z6ogDe5toQ0f7jPlxoiYMo4ECNZU+BR+YKwWvW6QxpwdZg5jHWJGMkStmgxR6sX0TGkdm6i0nEzjZfefbDjQX/XbmuH4RYyAkJao0XW08+h0OKfkeeCHwp6U5zkLCnYn00BN3li2kY7q5tL2nd/BynzSEoEe9DUTzoxW14Ze5g6ZRrrsUr57Z3GgHVKSYdmbcqWv0uV0EtsfS9hijLby8RE/NhrljkkVPMGWpe2Lnlr4VciT3gqu+OomOYz8an9WwUT3+ygJF51tjK6zBHl295WhxNifN1fC2Twg62T3+opKRE8KzFBRlHRH2dkToJvKMw/MntqgY6pgGDQw2VA6zFiLui2g0rJ5NoZfWNdW3vpvJu0rPV5zA2m+bkrF5J8tlKUz+raAnA808FeCGQlOPIZAM/o0jsQTYBFb5CW0/1qGyhNlctedg8njvEWxT4sstrBEquPq7FEatxrQig2xw9Lq2zyEGtQ+JeVbH2nutLjrNkV48Sj5BfQUSc9ka2E7+JsYJll9MWSkM5r06+KtT9AYGHCXRwICs39cpLY0h2 
+      
+- name: service always started
+  systemd:
+    name: alertmanager
+    state: started
+    enabled: true

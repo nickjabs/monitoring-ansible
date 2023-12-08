@@ -1,0 +1,6 @@
+---
+- name: Grafana
+  hosts: server1
+  roles: 
+  - grafana
+  become: true
